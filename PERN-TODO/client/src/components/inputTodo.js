@@ -19,7 +19,17 @@ const InputTodo = () => {
         body: JSON.stringify(body)
       });
 
-      window.location = "/";
+      const responseData = await response.json();
+
+      if (!response.ok) {
+
+        console.error(responseData.error); 
+      } else {
+        
+        console.log("Todo created successfully");
+        window.location = "/app";
+      }
+
 
       
     } catch (err) {

@@ -2,29 +2,23 @@ const express = require("express")
 const cors = require("cors")
 const app = express();
 const pool = require("./db")
+const todosRouter = require("./routes/todos")
 
 //Middlewares 
 app.use(express.json());
 app.use(cors());
 
+app.use("/todos",todosRouter);
 
-app.post("/todos", async (req,res)=>{
+
+//  APIs for Login/SignUp purposes
+
+app.post("/signup", async (req,res)=>{
     try {
         
-        const {description} = req.body;
-        const newTodo = await pool.query("INSERT INTO todo(description) VALUES($1) RETURNING *",[description]);
-        res.json(newTodo.rows[0]);
-        
-    } catch (err) {
-        console.error(err.message);
-    }
-
-})
-
-app.get("/todos", async (req,res)=>{
-    try {
-        const alltodos = await pool.query("SELECT * from todo");
-        res.json(alltodos.rows);
+        const {name,email,password} = req.body;
+        const newUser = await pool.query("INSERT INTO login(name,email,password) VALUES($1,$2,$3) RETURNING *",[name,email,password]);
+        res.json(newUser.rows[0]);
         
     } catch (err) {
         console.error(err.message);
@@ -32,43 +26,27 @@ app.get("/todos", async (req,res)=>{
 
 })
 
-app.get("/todos/:id", async (req, res) => {
+app.post("/login", async (req,res)=>{
     try {
-      const { id } = req.params;
-      const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [
-        id
-      ]);
-  
-      res.json(todo.rows[0]);
-    } catch (err) {
-      console.error(err.message);
-    }
-  });
-
-app.delete("/todos/:id",async (req,res)=>{
-    try {
-        const {id} = req.params;
-        const deleteTodo = await pool.query("DELETE FROM todo where todo_id = $1",[id]);
-        res.json("Todo was deleted!");
+        
+        const {email,password} = req.body;
+        const User = await pool.query("SELECT * from login WHERE email = $1 and password = $2",[email,password]);
+        if(User.rowCount>0){
+            return res.json("Success");
+        }
+        else{
+            return res.json("Failure");
+        }
+        
         
     } catch (err) {
         console.error(err.message);
+        res.status(500).json("Server Error");
     }
 
 })
 
-app.put("/todos/:id",async (req,res)=>{
-    try {
-        const {id} = req.params;
-        const {description} = req.body;
-        const updatedTodo = await pool.query("UPDATE todo SET description = $2 where todo_id = $1 RETURNING *",[id,description]);
-        res.json("Todo was updated!");
-        
-    } catch (err) {
-        console.error(err.message);
-    }
 
-})
 
 
 app.listen(5000,()=>{
