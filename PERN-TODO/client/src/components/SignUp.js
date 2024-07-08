@@ -37,9 +37,9 @@ const SignUp = () => {
         } else {
             
             console.log('Form submitted:', formData);
-            axios.post("http://localhost:5000/signup",formData).then((response)=>{
+            axios.post("http://localhost:5000/user",formData,{ withCredentials: true }).then((response)=>{
               console.log(response);
-              navigate('/');
+              navigate('/app');
             }).catch((err) => console.error(err.message));
 
 

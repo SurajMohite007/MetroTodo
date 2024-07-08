@@ -39,13 +39,16 @@ const Login = () => {
             setErrors({});
 
             console.log(formData); 
-            axios.post("http://localhost:5000/login",formData).then((response)=>{
+            axios.post("http://localhost:5000/user/login",formData,{ withCredentials: true }).then((response)=>{
               console.log(response);
-              if(response.data==="Success"){
+              if(response.data.result==="Success"){
+                const token = response.data.token;
+                localStorage.setItem('token',token);
                 navigate('/app');
               }
               else{
                 alert("No such record exists!");
+                
               }
             }).catch((err) => console.error(err.message));
 

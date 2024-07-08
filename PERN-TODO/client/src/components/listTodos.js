@@ -8,8 +8,19 @@ const ListTodos = () => {
 
     const deleteTodo = async (id)=>{
         try {
+            const token = localStorage.getItem('token');
+
+            const headers = {
+              'Content-Type': 'application/json',
+            };
+            
+            if (token) {
+              headers['Authorization'] = `Bearer ${token}`;
+            }
             const deleteTodo = await fetch(`http://localhost:5000/todos/${id}`,{
-                method: "DELETE"
+                method: "DELETE",
+                credentials: 'include',
+                headers:headers,
             });
             
             setTodos(todos.filter(todo => todo.todo_id !== id));
@@ -22,7 +33,20 @@ const ListTodos = () => {
     }
     const getTodos = async () =>{
         try {
-            const response = await fetch("http://localhost:5000/todos");
+
+            const token = localStorage.getItem('token');
+
+            const headers = {
+              'Content-Type': 'application/json',
+            };
+            
+            if (token) {
+              headers['Authorization'] = `Bearer ${token}`;
+            }
+            const response = await fetch("http://localhost:5000/todos",{
+              credentials: 'include',
+              headers:headers,
+            });
             const jsonData = await response.json();
             setTodos(jsonData);
             

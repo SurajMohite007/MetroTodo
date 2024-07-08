@@ -2,7 +2,8 @@ const pool = require("../db");
 
 async function handleGetAllTodos(req,res){
     try {
-        const alltodos = await pool.query("SELECT * from todo");
+        const id = req.user.id;
+        const alltodos = await pool.query("SELECT * from todo WHERE user_id = $1 ",[id]);
         res.json(alltodos.rows);
         
     } catch (err) {
@@ -50,7 +51,8 @@ async function handleCreateNewTodo(req,res){
     try {
         
         const {description} = req.body;
-        const newTodo = await pool.query("INSERT INTO todo(description) VALUES($1) RETURNING *",[description]);
+        const user_id = req.user.id;
+        const newTodo = await pool.query("INSERT INTO todo(description,user_id) VALUES($1,$2) RETURNING *",[description,user_id]);
         res.json(newTodo.rows[0]);
         
     } catch (err) {

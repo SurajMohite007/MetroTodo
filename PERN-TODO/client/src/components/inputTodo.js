@@ -13,9 +13,20 @@ const InputTodo = () => {
       // axios.post("http://localhost:5000/todos",obj).then((response)=>{
       //   console.log(response);
       // }).catch((err) => console.error(err.message));
+      const token = localStorage.getItem('token');
+
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
       const response = await fetch("http://localhost:5000/todos",{
         method: "POST",
-        headers: {"Content-type": "application/json"},
+        credentials: 'include',
+        // headers: {"Content-type": "application/json"},
+        headers:headers,
         body: JSON.stringify(body)
       });
 
@@ -29,8 +40,6 @@ const InputTodo = () => {
         console.log("Todo created successfully");
         window.location = "/app";
       }
-
-
       
     } catch (err) {
       console.error(err.message);
