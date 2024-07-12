@@ -7,10 +7,14 @@ const EditTodo = ({todo}) => {
         try {
             
             const body = {description};
+            const token = localStorage.getItem('token');
+
+            
+            
             const response = await fetch(`http://localhost:5000/todos/${todo.todo_id}`,{
                 method: "PUT",
                 credentials: 'include',
-                headers:{"Content-Type":"application/json"},
+                headers:{"Content-Type":"application/json", 'Authorization': `Bearer ${token}`},
                 body: JSON.stringify(body)
             })
             window.location = "/app";

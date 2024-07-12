@@ -22,6 +22,7 @@ async function handleUserLogin(req,res){
         if(User.rowCount>0){
             
             const token = setUser(User.rows[0]);
+            
             // res.cookie("uid",token ,{
             //     httpOnly: true,
             //     sameSite: 'None', 
@@ -29,7 +30,7 @@ async function handleUserLogin(req,res){
             //     path: '/', 
             //     secure: false,
                 
-            // });
+            // }).json({ result: "Success" });
             return res.json({result:"Success",token});
         }
         else{
