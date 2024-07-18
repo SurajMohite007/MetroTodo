@@ -1,4 +1,5 @@
 import React,{Fragment,useState} from 'react'
+import './InputTodo.css'
 // import axios from 'axios'
 
 const InputTodo = () => {
@@ -48,7 +49,7 @@ const InputTodo = () => {
   }
   return (
     <Fragment>
-      <h1 className="text-center mt-5 ">Pern Todo List</h1>
+      <h1 className="text-center mt-5 todo-heading">Pern Todo List</h1>
       <form className='d-flex mt-5' onSubmit ={onSubmitForm}>
       <input type='text' value={description} className='form-control' onChange={(e)=>{setdescription(e.target.value)}} ></input>
       <button className='btn btn-success'>Add</button>

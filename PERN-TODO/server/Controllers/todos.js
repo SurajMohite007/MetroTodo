@@ -3,13 +3,52 @@ const pool = require("../db");
 async function handleGetAllTodos(req,res){
     try {
         const id = req.user.id;
-        const alltodos = await pool.query("SELECT * from todo WHERE user_id = $1 ",[id]);
-        res.json(alltodos.rows);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5; 
+        const offset = (page - 1) * limit;
+        const allTodos = await pool.query("SELECT * from todo WHERE user_id = $1 ORDER BY todo_id LIMIT $2 OFFSET $3",[id,limit,offset]);
+
+        const totalCount = await pool.query(
+            "SELECT COUNT(*) FROM todo WHERE user_id = $1",
+            [id]
+        );
+
+        const totalPages = Math.ceil(totalCount.rows[0].count / limit);
+
+        res.json({
+            totalPages: totalPages,
+            currentPage: page,
+            todos: allTodos.rows
+        });
+
+        // res.json(allTodos.rows);
         
     } catch (err) {
         console.error(err.message);
     }
 }
+
+async function handleSearchTodos(req, res) {
+    try {
+      const id = req.user.id;
+      const searchTerm = req.query.searchTerm.toLowerCase(); 
+  
+      const searchQuery = `
+        SELECT * 
+        FROM todo 
+        WHERE user_id = $1 
+        AND LOWER(description) LIKE '%' || $2 || '%'
+        ORDER BY todo_id;
+      `;
+  
+      const searchResults = await pool.query(searchQuery, [id, searchTerm]);
+  
+      res.json(searchResults.rows);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ error: 'Server error' });
+    }
+  }
 
 async function handleGetTodoById(req,res){
     try {
@@ -60,4 +99,4 @@ async function handleCreateNewTodo(req,res){
     }
 }
 
-module.exports = {handleGetAllTodos,handleGetTodoById,handleUpdateTodoById,handleDeleteTodoById,handleCreateNewTodo};
+module.exports = {handleGetAllTodos,handleGetTodoById,handleUpdateTodoById,handleDeleteTodoById,handleCreateNewTodo,handleSearchTodos};

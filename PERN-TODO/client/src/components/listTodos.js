@@ -8,6 +8,13 @@ const ListTodos = () => {
     
     const [todos,setTodos] = useState([]);
     const [filteredTodos, setFilteredTodos] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage] = useState(5); 
+
+    useEffect(() => {
+      getTodos(currentPage);
+  }, [currentPage]);
 
     const deleteTodo = async (id)=>{
         try {
@@ -43,12 +50,44 @@ const ListTodos = () => {
         }
 
     }
-    const handleSearch = (searchTerm) => {
-      const filtered = todos.filter(todo => todo.description.toLowerCase().includes(searchTerm.toLowerCase()));
-      setFilteredTodos(filtered);
-      setCurrentPage(1);
+    // const handleSearch = (searchTerm) => {
+    //   const filtered = todos.filter(todo => todo.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    //   setFilteredTodos(filtered);
+    //   setCurrentPage(1);
+    // };
+    const handleSearch = async (searchTerm) => {
+      try {
+        const token = localStorage.getItem('token');
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+    
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+    
+        if (searchTerm.trim() === '') {
+
+          await getTodos(currentPage);
+        } else {
+          const response = await fetch(
+            `http://localhost:5000/todos/search?searchTerm=${searchTerm}`,
+            {
+              credentials: 'include',
+              headers: headers,
+            }
+          );
+  
+          const jsonData = await response.json();
+          setFilteredTodos(jsonData);
+          setCurrentPage(1); 
+        }
+    
+      } catch (err) {
+        console.error(err.message);
+      }
     };
-    const getTodos = async () =>{
+    const getTodos = async (page) =>{
         try {
 
             const token = localStorage.getItem('token');
@@ -60,13 +99,15 @@ const ListTodos = () => {
             if (token) {
               headers['Authorization'] = `Bearer ${token}`;
             }
-            const response = await fetch("http://localhost:5000/todos",{
+            const response = await fetch(`http://localhost:5000/todos?page=${page}&limit=${recordsPerPage}`,{
               credentials: 'include',
               headers:headers,
             });
             const jsonData = await response.json();
-            setTodos(jsonData);
-            setFilteredTodos(jsonData);
+            setTodos(jsonData.todos);
+            setFilteredTodos(jsonData.todos);
+            setTotalPages(jsonData.totalPages);
+
             
         } catch (err) {
             console.error(err.message)
@@ -74,18 +115,14 @@ const ListTodos = () => {
         }
     }
 
-    useEffect(()=>{
-        getTodos();
-    },[]);
-
     // For pageneation
-    const [currentPage,setCurrentPage]= useState(1);
-    const recordsPerPage = 5;
-    const lastIndex = currentPage*recordsPerPage;
-    const firstIndex = lastIndex - recordsPerPage;
-    const records = filteredTodos.slice(firstIndex,lastIndex);
-    const npage = Math.ceil(filteredTodos.length / recordsPerPage);
-    const numbers = [...Array(npage + 1).keys()].slice(1);
+    // const [currentPage,setCurrentPage]= useState(1);
+    // const recordsPerPage = 5;
+    // const lastIndex = currentPage*recordsPerPage;
+    // const firstIndex = lastIndex - recordsPerPage;
+    // const records = filteredTodos.slice(firstIndex,lastIndex);
+    // const npage = Math.ceil(filteredTodos.length / recordsPerPage);
+    // const numbers = [...Array(npage + 1).keys()].slice(1);
     
   return <Fragment>
   <div className='justify-content-center'>
@@ -106,44 +143,45 @@ const ListTodos = () => {
         <td>john@example.com</td>
       </tr> */}
       {
-        records.map((todo) =>(
+        
+        filteredTodos.map((todo) =>(
             <tr key={todo.todo_id}>
                 <td>{todo.description}</td>
                 <td><EditTodo todo = {todo} /></td>
                 <td><button className='btn btn-danger' onClick={()=>{deleteTodo(todo.todo_id)}} >Delete</button></td>
             </tr>
         ))
+        
       }
+      
     </tbody>
   </table>
-  <nav >
+  <nav>
     <ul className='pagination justify-content-center'>
-      <li className='page-item'>
-      <a href='#' className='page-link' onClick={prePage}>Prev</a>
-      </li>
-      {
-        numbers.map((n,i) => (
-          <li className= {`page-item ${currentPage===n ? 'active' : ''}`} key={i}>
-              <a href='#' className='page-link' onClick={()=> changeCpage(n)}>{n}</a>
-          </li>
-        ))
-      }
-      <li className='page-item'>
-      <a href='#' className='page-link' onClick={nextPage}>Next</a>
-      </li>
+        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <button className='page-link' onClick={prePage}>Prev</button>
+        </li>
+        {Array.from({ length: totalPages }, (_, index) => (
+            <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                <button className='page-link' onClick={() => changeCpage(index + 1)}>{index + 1}</button>
+            </li>
+        ))}
+        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+            <button className='page-link' onClick={nextPage}>Next</button>
+        </li>
     </ul>
-  </nav>
+</nav>
 
   </Fragment>;
 
   function nextPage(){
-    if(currentPage !== npage){
+    if(currentPage < totalPages){
       setCurrentPage(currentPage+1);
     }
 
   }
   function prePage(){
-    if(currentPage !== 1){
+    if(currentPage > 1){
       setCurrentPage(currentPage-1);
     }
 
