@@ -2,6 +2,7 @@ import React,{Fragment,useEffect,useState} from 'react'
 import EditTodo from './editTodo';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import SearchBar from './SearchBar';
+import DeleteTodoModal from './DeleteTodoModal';
 
 
 const ListTodos = () => {
@@ -87,6 +88,35 @@ const ListTodos = () => {
         console.error(err.message);
       }
     };
+    const handleCheckboxChange = async (e, todo) => {
+      const { checked } = e.target;
+      try {
+        const token = localStorage.getItem('token');
+        const headers = {
+          'Content-Type': 'application/json',
+        };
+    
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+    
+        const body = JSON.stringify({ completed: checked });
+    
+        const response = await fetch(`http://localhost:5000/todos/updateStatus/${todo.todo_id}`, {
+          method: 'PUT',
+          headers: headers,
+          body: body,
+        });
+    
+        if (response.ok) {
+          getTodos(currentPage);
+        } else {
+          console.error('Failed to update completion status');
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
     const getTodos = async (page) =>{
         try {
 
@@ -131,24 +161,29 @@ const ListTodos = () => {
   <table className="table mt-5 text-center">
     <thead>
       <tr>
+        <th>Status</th>
         <th>Description</th>
         <th>Edit</th>
         <th>Delete</th>
       </tr>
     </thead>
     <tbody>
-      {/* <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr> */}
+      {console.log(filteredTodos)}
       {
         
         filteredTodos.map((todo) =>(
             <tr key={todo.todo_id}>
-                <td>{todo.description}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={(e) => handleCheckboxChange(e, todo)}
+                  />
+                </td>
+                <td className={ todo.completed ? 'completed' : ''}>{todo.description}</td>
                 <td><EditTodo todo = {todo} /></td>
-                <td><button className='btn btn-danger' onClick={()=>{deleteTodo(todo.todo_id)}} >Delete</button></td>
+                {/* <td><button className='btn btn-danger' onClick={()=>{deleteTodo(todo.todo_id)}} >Delete</button></td> */}
+                <td><DeleteTodoModal todo={todo} deleteTodo={deleteTodo} /></td>
             </tr>
         ))
         

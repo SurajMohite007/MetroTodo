@@ -1,12 +1,14 @@
-import React from 'react'
-import { Link,useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import loginSchema from './validation/LoginValidation'
-import axios from 'axios'
-
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import loginSchema from './validation/LoginValidation';
+import axios from 'axios';
+import './Login.css'; 
 
 const Login = () => {
     const navigate = useNavigate();
+    const [agreeTerms, setAgreeTerms] = useState(false);
+    const [submitAttempted, setSubmitAttempted] = useState(false); 
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -20,14 +22,20 @@ const Login = () => {
             [name]: value,
         });
     };
+    const handleCheckboxChange = () => {
+        setAgreeTerms(!agreeTerms);
+    };
 
     const handleSubmit = (e) => {
-        
         e.preventDefault();
+        setSubmitAttempted(true);
+
+        if (!agreeTerms) {
+            return; 
+        }
 
         const { error } = loginSchema.validate(formData, { abortEarly: false });
         if (error) {
-            
             const validationErrors = error.details.reduce((errorsObj, errorItem) => {
                 return {
                     ...errorsObj,
@@ -36,27 +44,22 @@ const Login = () => {
             }, {});
             setErrors(validationErrors);
         } else {
-            
             setErrors({});
 
-            console.log(formData); 
-            axios.post("http://localhost:5000/user/login",formData,{ withCredentials: true }).then((response)=>{
-              console.log(response);
-              if(response.data.result==="Success"){
-                const token = response.data.token;
-                localStorage.setItem('token',token);
-                navigate('/app');
-              }
-              else{
-                alert("No such record exists!");
-                
-              }
+            axios.post("http://localhost:5000/user/login", formData, { withCredentials: true }).then((response) => {
+                if (response.data.result === "Success") {
+                    const token = response.data.token;
+                    localStorage.setItem('token', token);
+                    navigate('/app');
+                } else {
+                    alert("No such record exists!");
+                }
             }).catch((err) => console.error(err.message));
-
         }
     };
-  return (
-    <div className='d-flex justify-content-center align-items-center bg-primary vh-100'>
+
+    return (
+        <div className='login-background'> 
             <div className='bg-white p-3 rounded w-25'>
                 <h2>Log In</h2>
                 <form onSubmit={handleSubmit}>
@@ -84,13 +87,27 @@ const Login = () => {
                         />
                         {errors.password && <div className='error-message'>* {errors.password}</div>}
                     </div>
+                    <div className='mb-3 ml-4'>
+                        <input
+                            type='checkbox'
+                            id='agreeTerms'
+                            name='agreeTerms'
+                            checked={agreeTerms}
+                            onChange={handleCheckboxChange}
+                            className='form-check-input'
+                        />
+                        <label htmlFor='agreeTerms' className='form-check-label'>
+                            I agree to the Terms and Conditions
+                        </label>
+                        {!agreeTerms && submitAttempted && <div className='error-message'>Please agree to the Terms and Conditions.</div>}
+                    </div>
                     <button type='submit' className='btn btn-success w-100'>Log In</button>
-                    <p> Agree to Terms and Conditions</p>
-                    <Link to="/signup" className='btn btn-default border w-100 bg-light text-decoration-none'>Create Account</Link>
+                    
+                    <Link to="/signup" className='btn btn-default border mt-2 w-100 bg-light text-decoration-none'>Create Account</Link>
                 </form>
             </div>
         </div>
-  )
-}
+    );
+};
 
-export default Login
+export default Login;

@@ -1,7 +1,7 @@
 import React,{Fragment, useState} from 'react'
 
 const EditTodo = ({todo}) => {
-    const [description,setDescription] = useState(todo.description);
+    const [description,setDescription] = useState(todo.description || '');
     const updateDescription = async (e)=>{
         e.preventDefault();
         try {

@@ -3,6 +3,7 @@ import { Link,useNavigate } from 'react-router-dom';
 import Joi from 'joi';
 import signUpSchema from './validation/SignUpValidation';
 import axios from 'axios'
+import './SignUp.css'
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
@@ -12,6 +13,12 @@ const SignUp = () => {
     });
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+    const [agreeTerms, setAgreeTerms] = useState(false);
+    const [submitAttempted, setSubmitAttempted] = useState(false); 
+
+    const handleCheckboxChange = () => {
+        setAgreeTerms(!agreeTerms);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,6 +30,11 @@ const SignUp = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setSubmitAttempted(true);
+
+        if (!agreeTerms) {
+            return; 
+        }
 
         const { error } = signUpSchema.validate(formData, { abortEarly: false });
 
@@ -48,7 +60,8 @@ const SignUp = () => {
     };
 
     return (
-        <div className='d-flex justify-content-center align-items-center bg-primary vh-100'>
+        // <div className='d-flex justify-content-center align-items-center bg-primary vh-100'>
+        <div className='signup-background'>
             <div className='bg-white p-3 rounded w-25'>
                 <h2>Sign Up</h2>
                 <form onSubmit={handleSubmit}>
@@ -88,12 +101,26 @@ const SignUp = () => {
                         />
                         {errors.password && <span className='error-message'>* {errors.password}</span>}
                     </div>
+                    <div className='mb-3 ml-4'>
+                        <input
+                            type='checkbox'
+                            id='agreeTerms'
+                            name='agreeTerms'
+                            checked={agreeTerms}
+                            onChange={handleCheckboxChange}
+                            className='form-check-input'
+                        />
+                        <label htmlFor='agreeTerms' className='form-check-label'>
+                            I agree to the Terms and Conditions
+                        </label>
+                        {!agreeTerms && submitAttempted && <div className='error-message'>Please agree to the Terms and Conditions.</div>}
+                    </div>
                     <button type='submit' className='btn btn-success w-100'>Sign Up</button>
-                    <p> Agree to Terms and Conditions</p>
-                    <Link to="/" className='btn btn-default border w-100 bg-light text-decoration-none'>Login</Link>
+                    <Link to="/" className='btn btn-default border mt-2 w-100 bg-light text-decoration-none'>Login</Link>
                 </form>
             </div>
-        </div>
+            </div>
+        // </div>
     );
 };
 

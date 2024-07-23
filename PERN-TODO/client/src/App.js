@@ -10,6 +10,7 @@ import SignUp from './components/SignUp';
 
 
 
+
 function App() {
   
   return (
@@ -40,5 +41,6 @@ function AppLayout() {
     </div>
   );
 }
+
 
 export default App;
