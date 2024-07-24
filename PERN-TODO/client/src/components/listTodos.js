@@ -12,10 +12,11 @@ const ListTodos = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(5); 
+    const [filterStatus, setFilterStatus] = useState('all');
 
     useEffect(() => {
-      getTodos(currentPage);
-  }, [currentPage]);
+      getTodos(currentPage,filterStatus);
+  }, [currentPage,filterStatus]);
 
     const deleteTodo = async (id)=>{
         try {
@@ -88,6 +89,11 @@ const ListTodos = () => {
         console.error(err.message);
       }
     };
+    const handleFilterChange = (status) => {
+      setFilterStatus(status);
+      setCurrentPage(1); 
+    };
+
     const handleCheckboxChange = async (e, todo) => {
       const { checked } = e.target;
       try {
@@ -117,7 +123,7 @@ const ListTodos = () => {
         console.error(err.message);
       }
     };
-    const getTodos = async (page) =>{
+    const getTodos = async (page,status) =>{
         try {
 
             const token = localStorage.getItem('token');
@@ -129,7 +135,7 @@ const ListTodos = () => {
             if (token) {
               headers['Authorization'] = `Bearer ${token}`;
             }
-            const response = await fetch(`http://localhost:5000/todos?page=${page}&limit=${recordsPerPage}`,{
+            const response = await fetch(`http://localhost:5000/todos?page=${page}&limit=${recordsPerPage}&completed=${status}`,{
               credentials: 'include',
               headers:headers,
             });
@@ -155,9 +161,36 @@ const ListTodos = () => {
     // const numbers = [...Array(npage + 1).keys()].slice(1);
     
   return <Fragment>
-  <div className='justify-content-center'>
-  <SearchBar handleSearch={handleSearch} />
-  </div>
+  <div className="d-flex justify-content-between align-items-center mt-4 mb-3">
+      <div className="btn-group" role="group">
+        <button
+          type="button"
+          className={`btn btn-outline-primary ${filterStatus === 'all' ? 'active' : ''}`}
+          onClick={() => handleFilterChange('all')}
+        >
+          All
+        </button>
+        <button
+          type="button"
+          className={`btn btn-outline-success ${filterStatus === 'completed' ? 'active' : ''}`}
+          onClick={() => handleFilterChange('completed')}
+        >
+          Completed
+        </button>
+        <button
+          type="button"
+          className={`btn btn-outline-danger ${filterStatus === 'active' ? 'active' : ''}`}
+          onClick={() => handleFilterChange('active')}
+        >
+          Active
+        </button>
+      </div>
+      <div>
+        <SearchBar handleSearch={handleSearch} />
+      </div>
+    </div>
+  
+
   <table className="table mt-5 text-center">
     <thead>
       <tr>

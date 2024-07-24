@@ -6,7 +6,24 @@ async function handleGetAllTodos(req,res){
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5; 
         const offset = (page - 1) * limit;
-        const allTodos = await pool.query("SELECT * from todo WHERE user_id = $1 ORDER BY todo_id LIMIT $2 OFFSET $3",[id,limit,offset]);
+        const comp = req.query.completed;
+
+        let query = "SELECT * FROM todo WHERE user_id = $1";
+
+        const queryParams = [id];
+
+        if (comp !== 'all') {
+          if (comp === 'completed') {
+            query += " AND completed = true"; 
+          } else if (comp === 'active') {
+            query += " AND completed = false"; 
+          }
+        }
+
+        query += " ORDER BY todo_id LIMIT $2 OFFSET $3";
+
+
+        const allTodos = await pool.query(query,[...queryParams,limit,offset]);
 
         const totalCount = await pool.query(
             "SELECT COUNT(*) FROM todo WHERE user_id = $1",
