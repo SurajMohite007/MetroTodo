@@ -1,16 +1,16 @@
-/* InputTodo.css */
+
 
 .todo-heading {
     text-align: center;
-    margin-top: 5rem; /* Adjust margin as needed */
+    margin-top: 5rem; 
     font-size: 2rem;
     font-weight: bold;
-    color: #333; /* Adjust color as needed */
-    cursor: pointer; /* Add cursor pointer on hover */
-    transition: color 0.3s ease; /* Smooth color transition on hover */
+    color: #333; 
+    cursor: pointer; 
+    transition: color 0.3s ease; 
   }
   
   .todo-heading:hover {
-    color: #008000; /* Change color on hover */
+    color: #FFA500; 
   }
   

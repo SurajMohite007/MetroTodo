@@ -22,11 +22,6 @@ function App() {
       <Route path='/app' element=<AppLayout />></Route>
     </Routes>
     
-      
-      {/* <div className="container">
-      <InputTodo />
-      <ListTodos />
-      </div> */}
     
     </BrowserRouter>
     </Fragment>

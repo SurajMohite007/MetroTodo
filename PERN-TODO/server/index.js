@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const {restrictToLoggedinUserOnly} = require('./Middlewares/auth');
 
 const corsOptions = {
-    origin: "http://localhost:3000", // to allow requests from client
+    origin: "http://localhost:3000", 
     credentials: true,
   };
 //Middlewares 

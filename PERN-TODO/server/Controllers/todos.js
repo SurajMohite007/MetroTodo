@@ -38,7 +38,7 @@ async function handleGetAllTodos(req,res){
             todos: allTodos.rows
         });
 
-        // res.json(allTodos.rows);
+        
         
     } catch (err) {
         console.error(err.message);
@@ -58,7 +58,7 @@ async function handleSearchTodos(req, res) {
   
       const queryParams = [id];
   
-      // Append search term condition if searchTerm is not empty
+      
       if (searchTerm.trim() !== '') {
         searchQuery += `
           AND LOWER(description) LIKE '%' || $2 || '%'

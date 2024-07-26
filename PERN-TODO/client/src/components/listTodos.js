@@ -25,7 +25,7 @@ const ListTodos = () => {
           //   Cookies.set('uid', token2, {
           //     httpOnly: true,
           //     sameSite: 'None',
-          //     secure: false, // Set secure to true to ensure the cookie is only sent over HTTPS
+          //     secure: false,
           //     domain: 'localhost',
           //     path: '/',
           // });
@@ -52,11 +52,7 @@ const ListTodos = () => {
         }
 
     }
-    // const handleSearch = (searchTerm) => {
-    //   const filtered = todos.filter(todo => todo.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    //   setFilteredTodos(filtered);
-    //   setCurrentPage(1);
-    // };
+    
     const handleSearch = async (searchTerm) => {
       try {
         const token = localStorage.getItem('token');
@@ -215,7 +211,7 @@ const ListTodos = () => {
                 </td>
                 <td className={ todo.completed ? 'completed' : ''}>{todo.description}</td>
                 <td><EditTodo todo = {todo} /></td>
-                {/* <td><button className='btn btn-danger' onClick={()=>{deleteTodo(todo.todo_id)}} >Delete</button></td> */}
+                
                 <td><DeleteTodoModal todo={todo} deleteTodo={deleteTodo} /></td>
             </tr>
         ))

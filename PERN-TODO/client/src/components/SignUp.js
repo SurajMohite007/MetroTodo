@@ -1,6 +1,5 @@
 import React, { useState} from 'react';
 import { Link,useNavigate } from 'react-router-dom';
-import Joi from 'joi';
 import signUpSchema from './validation/SignUpValidation';
 import axios from 'axios'
 import './SignUp.css'
@@ -51,7 +50,7 @@ const SignUp = () => {
             console.log('Form submitted:', formData);
             axios.post("http://localhost:5000/user",formData,{ withCredentials: true }).then((response)=>{
               console.log(response);
-              navigate('/app');
+              navigate('/');
             }).catch((err) => console.error(err.message));
 
 
@@ -60,7 +59,7 @@ const SignUp = () => {
     };
 
     return (
-        // <div className='d-flex justify-content-center align-items-center bg-primary vh-100'>
+
         <div className='signup-background'>
             <div className='bg-white p-3 rounded w-25'>
                 <h2>Sign Up</h2>
@@ -113,14 +112,14 @@ const SignUp = () => {
                         <label htmlFor='agreeTerms' className='form-check-label'>
                             I agree to the Terms and Conditions
                         </label>
-                        {!agreeTerms && submitAttempted && <div className='error-message'>Please agree to the Terms and Conditions.</div>}
+                        {!agreeTerms && submitAttempted && <div className='error-message'>*Please agree to the Terms and Conditions.</div>}
                     </div>
                     <button type='submit' className='btn btn-success w-100'>Sign Up</button>
                     <Link to="/" className='btn btn-default border mt-2 w-100 bg-light text-decoration-none'>Login</Link>
                 </form>
             </div>
             </div>
-        // </div>
+        
     );
 };
 

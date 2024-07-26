@@ -14,8 +14,8 @@ code {
 
 .error-message {
   color: red;
-  margin-top: 5px; /* Optional: Adjust margin for spacing */
-  font-size: 14px; /* Optional: Adjust font size */
+  margin-top: 5px; 
+  font-size: 14px; 
 }
 
 .completed {

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import loginSchema from './validation/LoginValidation';
 import axios from 'axios';
 import './Login.css'; 
@@ -99,7 +98,7 @@ const Login = () => {
                         <label htmlFor='agreeTerms' className='form-check-label'>
                             I agree to the Terms and Conditions
                         </label>
-                        {!agreeTerms && submitAttempted && <div className='error-message'>Please agree to the Terms and Conditions.</div>}
+                        {!agreeTerms && submitAttempted && <div className='error-message'>*Please agree to the Terms and Conditions.</div>}
                     </div>
                     <button type='submit' className='btn btn-success w-100'>Log In</button>
                     
