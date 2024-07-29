@@ -37,7 +37,7 @@ const ListTodos = () => {
             if (token) {
               headers['Authorization'] = `Bearer ${token}`;
             }
-            const deleteTodo = await fetch(`http://localhost:5000/todos/${id}`,{
+            const deleteTodo = await fetch(`/todos/${id}`,{
                 method: "DELETE",
                 credentials: 'include',
                 headers:headers,
@@ -69,7 +69,7 @@ const ListTodos = () => {
           await getTodos(currentPage);
         } else {
           const response = await fetch(
-            `http://localhost:5000/todos/search?searchTerm=${searchTerm}`,
+            `/todos/search?searchTerm=${searchTerm}`,
             {
               credentials: 'include',
               headers: headers,
@@ -104,7 +104,7 @@ const ListTodos = () => {
     
         const body = JSON.stringify({ completed: checked });
     
-        const response = await fetch(`http://localhost:5000/todos/updateStatus/${todo.todo_id}`, {
+        const response = await fetch(`/todos/updateStatus/${todo.todo_id}`, {
           method: 'PUT',
           headers: headers,
           body: body,
@@ -131,7 +131,7 @@ const ListTodos = () => {
             if (token) {
               headers['Authorization'] = `Bearer ${token}`;
             }
-            const response = await fetch(`http://localhost:5000/todos?page=${page}&limit=${recordsPerPage}&completed=${status}`,{
+            const response = await fetch(`/todos?page=${page}&limit=${recordsPerPage}&completed=${status}`,{
               credentials: 'include',
               headers:headers,
             });

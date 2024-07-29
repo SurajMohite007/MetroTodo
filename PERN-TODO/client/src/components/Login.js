@@ -45,7 +45,7 @@ const Login = () => {
         } else {
             setErrors({});
 
-            axios.post("http://localhost:5000/user/login", formData, { withCredentials: true }).then((response) => {
+            axios.post("/user/login", formData, { withCredentials: true }).then((response) => {
                 if (response.data.result === "Success") {
                     const token = response.data.token;
                     localStorage.setItem('token', token);

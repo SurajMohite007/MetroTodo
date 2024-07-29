@@ -23,7 +23,7 @@ const InputTodo = () => {
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
-      const response = await fetch("http://localhost:5000/todos",{
+      const response = await fetch("/todos",{
         method: "POST",
         credentials: 'include',
         // headers: {"Content-type": "application/json"},
