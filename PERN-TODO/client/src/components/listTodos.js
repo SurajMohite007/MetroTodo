@@ -1,4 +1,4 @@
-import React,{Fragment,useEffect,useState} from 'react'
+import React,{Fragment,useEffect,useState,useCallback} from 'react'
 import EditTodo from './editTodo';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import SearchBar from './SearchBar';
@@ -14,9 +14,7 @@ const ListTodos = () => {
     const [recordsPerPage] = useState(5); 
     const [filterStatus, setFilterStatus] = useState('all');
 
-    useEffect(() => {
-      getTodos(currentPage,filterStatus);
-  }, [currentPage,filterStatus]);
+    
 
     const deleteTodo = async (id)=>{
         try {
@@ -37,7 +35,7 @@ const ListTodos = () => {
             if (token) {
               headers['Authorization'] = `Bearer ${token}`;
             }
-            const deleteTodo = await fetch(`/todos/${id}`,{
+            await fetch(`/todos/${id}`,{
                 method: "DELETE",
                 credentials: 'include',
                 headers:headers,
@@ -119,7 +117,7 @@ const ListTodos = () => {
         console.error(err.message);
       }
     };
-    const getTodos = async (page,status) =>{
+    const getTodos = useCallback(async (page,status) =>{
         try {
 
             const token = localStorage.getItem('token');
@@ -145,7 +143,10 @@ const ListTodos = () => {
             console.error(err.message)
             
         }
-    }
+    },[recordsPerPage])
+    useEffect(() => {
+      getTodos(currentPage,filterStatus);
+  }, [currentPage,filterStatus,getTodos]);
 
     // For pageneation
     // const [currentPage,setCurrentPage]= useState(1);

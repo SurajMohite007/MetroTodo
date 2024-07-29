@@ -11,7 +11,7 @@ const EditTodo = ({todo}) => {
 
             
             
-            const response = await fetch(`/todos/${todo.todo_id}`,{
+            await fetch(`/todos/${todo.todo_id}`,{
                 method: "PUT",
                 credentials: 'include',
                 headers:{"Content-Type":"application/json", 'Authorization': `Bearer ${token}`},
