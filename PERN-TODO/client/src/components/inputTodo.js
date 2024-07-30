@@ -1,10 +1,12 @@
 import React,{Fragment,useState} from 'react'
 import './InputTodo.css'
+import { useNavigate } from 'react-router-dom';
 
 
 const InputTodo = () => {
   const [description,setdescription] = useState("");
   const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
   const onSubmitForm = async (e) =>{
     e.preventDefault();
     try {
@@ -40,7 +42,8 @@ const InputTodo = () => {
       } else {
         
         console.log("Todo created successfully");
-        window.location = "/app";
+        // window.location = "/app";
+        navigate("/app");
       }
       
     } catch (err) {

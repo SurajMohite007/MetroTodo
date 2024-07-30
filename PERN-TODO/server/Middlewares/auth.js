@@ -6,11 +6,11 @@ async function restrictToLoggedinUserOnly(req,res,next){
     
 
     if(!userUid) {
-        return res.redirect("http://localhost:3000/");
+        return res.redirect("https://metrotodo-1.onrender.com/");
     }
     const token = userUid.split('Bearer ')[1];
     const user = getUser(token);
-    if(!user) return res.redirect("http://localhost:3000/");
+    if(!user) return res.redirect("https://metrotodo-1.onrender.com/");
     req.user = user;
     next();
 
