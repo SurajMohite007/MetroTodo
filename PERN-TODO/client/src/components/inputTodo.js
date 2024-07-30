@@ -4,6 +4,7 @@ import './InputTodo.css'
 
 const InputTodo = () => {
   const [description,setdescription] = useState("");
+  const API_URL = process.env.REACT_APP_API_URL;
   const onSubmitForm = async (e) =>{
     e.preventDefault();
     try {
@@ -23,7 +24,7 @@ const InputTodo = () => {
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
-      const response = await fetch("/todos",{
+      const response = await fetch(`${API_URL}/todos`,{
         method: "POST",
         credentials: 'include',
         // headers: {"Content-type": "application/json"},

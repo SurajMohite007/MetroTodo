@@ -2,6 +2,7 @@ import React,{Fragment, useState} from 'react'
 
 const EditTodo = ({todo}) => {
     const [description,setDescription] = useState(todo.description || '');
+    const API_URL = process.env.REACT_APP_API_URL;
     const updateDescription = async (e)=>{
         e.preventDefault();
         try {
@@ -11,7 +12,7 @@ const EditTodo = ({todo}) => {
 
             
             
-            await fetch(`/todos/${todo.todo_id}`,{
+            await fetch(`${API_URL}/todos/${todo.todo_id}`,{
                 method: "PUT",
                 credentials: 'include',
                 headers:{"Content-Type":"application/json", 'Authorization': `Bearer ${token}`},

@@ -14,6 +14,8 @@ const ListTodos = () => {
     const [recordsPerPage] = useState(5); 
     const [filterStatus, setFilterStatus] = useState('all');
 
+    const API_URL = process.env.REACT_APP_API_URL;
+
     
 
     const deleteTodo = async (id)=>{
@@ -35,7 +37,7 @@ const ListTodos = () => {
             if (token) {
               headers['Authorization'] = `Bearer ${token}`;
             }
-            await fetch(`/todos/${id}`,{
+            await fetch(`${API_URL}/todos/${id}`,{
                 method: "DELETE",
                 credentials: 'include',
                 headers:headers,
@@ -67,7 +69,7 @@ const ListTodos = () => {
           await getTodos(currentPage);
         } else {
           const response = await fetch(
-            `/todos/search?searchTerm=${searchTerm}`,
+            `${API_URL}/todos/search?searchTerm=${searchTerm}`,
             {
               credentials: 'include',
               headers: headers,
@@ -102,7 +104,7 @@ const ListTodos = () => {
     
         const body = JSON.stringify({ completed: checked });
     
-        const response = await fetch(`/todos/updateStatus/${todo.todo_id}`, {
+        const response = await fetch(`${API_URL}/todos/updateStatus/${todo.todo_id}`, {
           method: 'PUT',
           headers: headers,
           body: body,
@@ -129,7 +131,7 @@ const ListTodos = () => {
             if (token) {
               headers['Authorization'] = `Bearer ${token}`;
             }
-            const response = await fetch(`/todos?page=${page}&limit=${recordsPerPage}&completed=${status}`,{
+            const response = await fetch(`${API_URL}/todos?page=${page}&limit=${recordsPerPage}&completed=${status}`,{
               credentials: 'include',
               headers:headers,
             });
@@ -143,7 +145,7 @@ const ListTodos = () => {
             console.error(err.message)
             
         }
-    },[recordsPerPage])
+    },[recordsPerPage,API_URL])
     useEffect(() => {
       getTodos(currentPage,filterStatus);
   }, [currentPage,filterStatus,getTodos]);

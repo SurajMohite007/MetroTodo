@@ -15,6 +15,8 @@ const SignUp = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [submitAttempted, setSubmitAttempted] = useState(false); 
 
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const handleCheckboxChange = () => {
         setAgreeTerms(!agreeTerms);
     };
@@ -48,7 +50,7 @@ const SignUp = () => {
         } else {
             
             console.log('Form submitted:', formData);
-            axios.post("/user",formData,{ withCredentials: true }).then((response)=>{
+            axios.post(`${API_URL}/user`,formData,{ withCredentials: true }).then((response)=>{
               console.log(response);
               navigate('/');
             }).catch((err) => console.error(err.message));

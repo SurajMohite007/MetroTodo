@@ -13,6 +13,7 @@ const Login = () => {
         password: '',
     });
     const [errors, setErrors] = useState({});
+    const API_URL = process.env.REACT_APP_API_URL;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -45,7 +46,7 @@ const Login = () => {
         } else {
             setErrors({});
 
-            axios.post("/user/login", formData, { withCredentials: true }).then((response) => {
+            axios.post(`${API_URL}/user/login`, formData, { withCredentials: true }).then((response) => {
                 if (response.data.result === "Success") {
                     const token = response.data.token;
                     localStorage.setItem('token', token);
