@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 //   };
 
   const corsOptions = {
-    origin: process.env.NODE_ENV === "production" ? "https://metrotodo.netlify.app" : "http://localhost:3000",
+    origin: process.env.NODE_ENV === "production" ? "https://metrotodo-1.onrender.com" : "http://localhost:3000",
     credentials: true,
   };
 //Middlewares 
