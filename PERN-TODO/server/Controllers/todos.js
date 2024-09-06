@@ -37,6 +37,7 @@ async function handleGetAllTodos(req,res){
             currentPage: page,
             todos: allTodos.rows
         });
+        
 
         
         

@@ -1,6 +1,6 @@
 
 import './App.css';
-import React,{Fragment} from 'react';
+import React,{Fragment,useState} from 'react';
 import InputTodo from './components/inputTodo';
 import ListTodos from './components/listTodos';
 import Login from './components/Login';
@@ -12,6 +12,13 @@ import SignUp from './components/SignUp';
 
 
 function App() {
+
+  const [todosUpdated, setTodosUpdated] = useState(false);
+
+  
+  const handleTodoAdded = () => {
+    setTodosUpdated(prev => !prev); 
+  };
   
   return (
     <Fragment>
@@ -19,7 +26,7 @@ function App() {
     <Routes>
       <Route path='/' element=<Login />></Route>
       <Route path='/signup' element=<SignUp />></Route>
-      <Route path='/app' element=<AppLayout />></Route>
+      <Route path='/app' element=<AppLayout onTodoAdded={handleTodoAdded} todosUpdated={todosUpdated} />></Route>
     </Routes>
     
     
@@ -28,11 +35,11 @@ function App() {
   );
 }
 
-function AppLayout() {
+function AppLayout({ onTodoAdded, todosUpdated }) {
   return (
     <div className="container">
-      <InputTodo />
-      <ListTodos />
+      <InputTodo onTodoAdded={onTodoAdded} />
+      <ListTodos trigger={todosUpdated}/>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import './InputTodo.css'
 import { useNavigate } from 'react-router-dom';
 
 
-const InputTodo = () => {
+const InputTodo = ({ onTodoAdded }) => {
   const [description,setdescription] = useState("");
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
@@ -42,7 +42,9 @@ const InputTodo = () => {
       } else {
         
         console.log("Todo created successfully");
-        // window.location = "/app";
+        setdescription("");
+        onTodoAdded();
+        
         navigate("/app");
       }
       
@@ -53,7 +55,7 @@ const InputTodo = () => {
   }
   return (
     <Fragment>
-      <h1 className="text-center mt-5 todo-heading">Pern Todo List</h1>
+      <h1 className="text-center mt-5 todo-heading">PLAN-IT</h1>
       <form className='d-flex mt-5' onSubmit ={onSubmitForm}>
       <input type='text' value={description} className='form-control' onChange={(e)=>{setdescription(e.target.value)}} ></input>
       <button className='btn btn-success'>Add</button>

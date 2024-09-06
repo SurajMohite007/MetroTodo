@@ -5,7 +5,7 @@ import SearchBar from './SearchBar';
 import DeleteTodoModal from './DeleteTodoModal';
 
 
-const ListTodos = () => {
+const ListTodos = ({ trigger }) => {
     
     const [todos,setTodos] = useState([]);
     const [filteredTodos, setFilteredTodos] = useState([]);
@@ -120,6 +120,7 @@ const ListTodos = () => {
       }
     };
     const getTodos = useCallback(async (page,status) =>{
+      
         try {
 
             const token = localStorage.getItem('token');
@@ -147,8 +148,9 @@ const ListTodos = () => {
         }
     },[recordsPerPage,API_URL])
     useEffect(() => {
+  
       getTodos(currentPage,filterStatus);
-  }, [currentPage,filterStatus,getTodos]);
+  }, [currentPage,filterStatus,getTodos,trigger]);
 
     // For pageneation
     // const [currentPage,setCurrentPage]= useState(1);
